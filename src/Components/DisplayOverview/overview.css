@@ -1,0 +1,139 @@
+*{
+    font-size: 25px;
+}
+
+.container{
+    width: 600px;
+    height: 220px;
+    border-radius: 4px;
+    background-color: rgb(187, 155, 114);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.image-cont{
+    background-color: aliceblue;
+    height: 200px;
+    width: 208.99px ;
+    margin: 10px;
+    border-radius: 8px;
+}
+.del{
+    position: relative;
+    right: 0px;
+    width: 60px;
+    height: 20px;
+    font-size: 12px; 
+}
+
+.words-cont{
+    height: 90%;
+    width: 400px;
+    margin: 5px;
+    margin-right: 8px;
+    padding: 2px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: left;
+
+}
+
+.person-info{
+    height: 30px;
+    flex-grow: 0.5;
+    display: flex;
+    align-items: center;
+    
+}
+.username{
+    font-size: 17px;
+}
+
+.image{
+    background-size: cover;
+    border-radius: 100%;
+    width: 33%;
+    max-width: 35px;
+    flex-grow: 2;
+    height: 100%;
+    max-height: 35px;
+    margin-left: 5px;
+}
+.username{
+    margin-left: 7px;
+    display: block;
+}
+
+.otitle{
+    font-size: 22px;
+}
+
+.location{
+    font-size: 18px;
+    color: grey;
+}
+
+.description{
+    font-size: 18px;
+    line-height: 21px;
+    max-width: 500px;
+    flex-grow: 2;
+    max-height: 110px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    resize: none;
+    border: 0px;
+}
+
+.words-cont, .person-info,.person-info > * ,.words-cont > *{
+    background-color: rgb(241, 217, 186);
+}
+
+.price{
+    margin-left: auto;
+    background-color: rgb(143, 204, 143);
+    padding: 6px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    border: 2px solid rgb(4, 87, 87);
+    font-size: 25px;
+}
+
+.activityCont{
+    position: fixed;
+    top: 10vh;
+    right: 15%;
+    background-color: aquamarine;
+    width: 70%;
+    height: 80vh;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 20px;
+    overflow-y: auto;
+}
+
+.activityConta{
+    display: flex;
+    border-radius: 10px;
+    background-color: darkcyan ;
+    margin: auto;
+    width: 90%;
+}
+
+.awords-cont{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    background-color: darkcyan ;
+    margin: 10px;
+}
+
+.crj{
+background-color: darkcyan;
+}
