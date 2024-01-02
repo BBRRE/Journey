@@ -1,6 +1,7 @@
 import { ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage"
 import { storage } from './firebase'
-
+import ImageCompressor from "image-compressor.js"
+import imageConversion  from 'image-conversion'
 
 
 export async function uploadImages(images, uid, projectName, overview){
@@ -8,7 +9,9 @@ export async function uploadImages(images, uid, projectName, overview){
     for(let i = 0; i < images.length; i++){
         let bucket = `/JourneyImages/${uid}/${projectName}/${overview}/${images[i].name}`
         const imageRef = ref(storage, bucket)
-        const result = await uploadBytes(imageRef, images[i]).then(console.log('success')).catch((err) => {
+        const compressor = new ImageCompressor();
+        const newImage = await compressor.compress(images[i], { quality: 0.8 });
+        const result = await uploadBytes(imageRef, newImage).then(console.log('success')).catch((err) => {
             console.log(err)
         })
     }

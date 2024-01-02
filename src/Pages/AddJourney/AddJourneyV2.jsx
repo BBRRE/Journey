@@ -25,7 +25,7 @@ export default function AddJourney() {
               type="file"
               id={`photoInput${i + 1}`}
               multiple
-              accept="image/png, image/gif, image/jpeg"
+              accept="image/*"
               className="file"
             />
           </label>
@@ -167,7 +167,7 @@ export default function AddJourney() {
             <input
               type="file"
               className="file"
-              accept="image/png, image/gif, image/jpeg"
+              accept="image/*"
               multiple
               id="overviewFileInput"
             />

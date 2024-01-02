@@ -34,7 +34,7 @@ export default function Overview(props) {
     <div className="container" onClick={displayData}>
       <div className="image-cont">
         <Carousel
-          autoPlay={false}
+          autoPlay={true}
           infiniteLoop={true}
           showThumbs={false}
           showIndicators={false}
