@@ -23,3 +23,5 @@ src
 *.njsproj
 *.sln
 *.sw?
+
+src/config/Firebase.js
