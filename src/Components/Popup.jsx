@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Activity from './Activity'
+import Activity from './Activity/Activity'
 
 function Popup(props) {
 
@@ -7,7 +7,7 @@ function Popup(props) {
     <div className='activityCont'>
         <button onClick={() => {
             props.setd(false)
-        }} className="button">
+        }} className="button cx">
             close
         </button>
        {props.obj.map(element => {
