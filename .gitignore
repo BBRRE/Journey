@@ -24,4 +24,6 @@ src
 *.sln
 *.sw?
 
-src/config/Firebase.js
+src/config/firebase.js
+src/Config/firebase.js
+src/Config/firebase.js
