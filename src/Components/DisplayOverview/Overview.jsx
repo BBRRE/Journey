@@ -1,50 +1,50 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
-import "./overview.css";
-import { useState } from "react";
-import { useEffect } from "react";
 import { getJourney } from "../../Config/firestore";
-import Popup from "../Popup";
+import '../../index.css'
+import { Link } from "react-router-dom";
 
 export default function Overview(props) {
-
+//
   const [activityInfo, setActivityInfo] = useState([]);
-  const [triger, setTriger] = useState(false)
+  const [sum, setSum] = useState(0);
 
   useEffect(() => {
-    const getData = async () => {
-      setActivityInfo(await getJourney(`journeyData/${props.obj.id}/acivity`))
-    }
-    getData()
-  },[])
+    const fetchData = async () => {
+      const data = await getJourney(`journeyData/${props.obj.id}/acivity`);
+      setActivityInfo(data);
+    };
 
+    fetchData();
+  }, [props.obj.id]);
 
-  const displayData = () => {
-    console.log(activityInfo  )
-    if (activityInfo.length !== 0){
-      setTriger(true)
-    }else{
+  useEffect(() => {
+    const calculateSum = () => {
+      let totalSum = 0;
+      activityInfo.forEach(activity => {
+        totalSum += activity.price;
+      });
+      setSum(totalSum);
+    };
 
-    }
-      }
+    calculateSum();
+  }, [activityInfo]);
+
 
       const getActivityImages = (ac) => {
         return ac.map((element) =>
           element.imageURL.map((a) => (
             <div key={crypto.randomUUID()}>
-              <img className="plz" src={a} alt="Activity Image" />
+              <img className="w-[200px] h-[200px] object-cover align-top inline-block " src={a} alt="Activity Image" />
             </div>
           ))
         );
       };
 
   return (<>
-    <Popup trigger={triger}obj={activityInfo} setd={setTriger}>
-
-    </Popup>
-    <div className="container" >
-      <div className="image-cont">
+    <div className=" flex bg-gradient-to-r from-blue-gray-100 to-primaryBg-dark h-[220px] w-[600px] justify-start place-items-center rounded-md mx-auto shadow-xl " >
+      <div className=" w-[200px] h-[209px] ml-[9px] justify-center flex place-items-center align-middle">
         <Carousel
           autoPlay={true}
           infiniteLoop={true}
@@ -56,28 +56,23 @@ export default function Overview(props) {
           centerMode={false}
           autoFocus={false}
         >
-          { props.obj.imageURL.map(a=> {
-            return(
-              <div key={crypto.randomUUID()}>
-                <img className="plz" src={a} />
-              </div>
-            )
-          })}
           { 
             getActivityImages(activityInfo)
           }
         </Carousel>
       </div>
-      <div className="words-cont" onClick={displayData}> 
-        <span className="otitle">{props.obj.name}</span>
-        <span className="location">{props.obj.location}</span>
-        <div className="description" >{props.obj.description}</div>
-        <div className="person-info">
-          <img className="image" src={props.obj.photoURL} />
-          <span className="username">{props.obj.userName}</span>
-          <span className="price">£{props.obj.price}</span>
+      <Link to={`/${props.obj.userName}/${props.obj.id}`}>
+      <div className="flex flex-col ml-[20px] mr-[10px] gap-[3px] relative h-[90%]  "> 
+        <span className="font-fontSecondary text-[30px] text-pretty">{props.obj.name}</span>
+        <div className="ml-[15px] font-fontMain text-[18px] text-pretty" >{props.obj.description}</div>
+        <span className="text-blue-gray-500 mt-[5px] text-[15px] text-pretty">{props.obj.location}</span>
+        <div className="flex w-[361px] mt-auto mb-[10px] ">
+          <img className="object-cover rounded-full w-[50px]  text-pretty" src={props.obj.photoURL} />
+          <span className="font-fontSecondary my-auto ml-[10px] text-[20px] text-pretty">@{props.obj.userName}</span>
+          <img src="/assets/Rectangle.svg" className="absolute right-0 bottom-3 z-0 text-pretty" /><span className="my-auto text-pretty ml-auto mr-[15px] mb-[10px] z-20 text-primaryBg-light text-xl w-[90px] inline-block text-center align-middle absolute right-0 bottom-3  ">£{sum.toFixed(2)}</span>
         </div>
       </div>
+      </Link>
     </div>
     </>
   );

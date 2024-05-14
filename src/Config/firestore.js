@@ -7,34 +7,36 @@ import { ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage"
 import { isTemporaryLayout } from "react-md";
 import { deleteObject } from "firebase/storage";
 import { deleteDoc } from "firebase/firestore";
+import { setDoc } from "firebase/firestore";
 
 
 //path for fireStore
 const JOURNEYDATA = `journeyData`
 
-export async function addJourneyData(uid,location,name,description,price, uuid, username,photoURL){
+export async function addJourneyData(uid,location,name,description, uuid, email,photoURL){
     //add a document to the collection in db with the path of JOURNEYDATA, with an object
-    const myDocRef = addDoc(collection(db,JOURNEYDATA), {uid: uid,
+    const username = (await getDoc(doc(db,`users/${ email}`))).data()
+    
+    const myDocRef = await addDoc(collection(db,JOURNEYDATA), {uid: uid,
         name: name,
-        location: location,
         description: description,
-        price: price,
+        location: location,
         imageBucket: `/JourneyImages/${uid}/${uuid}/overview`,
-        userName: username,
+        userName: username.username,
         photoURL: photoURL
     })
-         
         return myDocRef 
 } 
 
 
-export async function addActivityData(activityName, description, price, imageBucket , docRef,n){
+export async function addActivityData(activityName, description, price, location, imageBucket , docRef,n){
     
     addDoc(collection(db,`${docRef.path}/acivity`),{
         activityNumber: n,
         activityName: activityName,
         description: description,
         price: price,
+        location: location,
         imageBucket: imageBucket
     })
 }
@@ -42,7 +44,7 @@ export async function addActivityData(activityName, description, price, imageBuc
 //fetch data
 export async function getJourney(x){
     const querySnapshot = getDocs(collection(db,x))
-
+    console.log(querySnapshot)
     let allData = []
 
     for(const documentSnapshot of (await querySnapshot).docs){
@@ -50,7 +52,8 @@ export async function getJourney(x){
         allData.push({
             ...data,
             id: documentSnapshot.id,
-            imageURL: await retrieveImages(data['imageBucket'])
+            imageURL: await retrieveImages(data['imageBucket']
+            )
         })
     }
     return allData
@@ -58,9 +61,8 @@ export async function getJourney(x){
 }
 
 export async function getUserJourney(user){
-    if(user){
     console.log(user)
-    const querya =  query(collection(db,JOURNEYDATA), where('uid', '==', await user))
+    const querya =  query(collection(db,JOURNEYDATA), where('userName', '==', await user))
     const querySnapshot = await getDocs(querya)
 
     let allData = []
@@ -74,7 +76,6 @@ export async function getUserJourney(user){
         })
     }
     return allData
-    }
 }
 
 export async function deleteData(x){
@@ -110,11 +111,6 @@ export async function deleteData(x){
       }
 
 
-    //  const subcollections =  collection(db,`journeyData/${x.id}/acivity`)
-    //  const docsSnap = await getDocs(subcollections)
-    // docsSnap.docs.forEach(async doc => {
-    //     await deleteDoc(doc(db,`journeyData/${x.id}/acivity/${doc.id}`))
-    // })
     const subcollections = collection(db, `journeyData/${x.id}/acivity`);
     const docsSnap = await getDocs(subcollections);
     
@@ -137,15 +133,90 @@ export async function deleteData(x){
     }catch(err){
         console.error(err)
     }
-    // Continue with the rest of your code after all deletions are complete
-    
-//     // Loop over subcollections and delete documents
-//     subcollections.forEach(async (subcollection) => {
-//       const documents = await subcollection.listDocuments();
-      
-//       documents.forEach(async (document) => {
-//         await document.delete();
-//         console.log(`Document ${document.id} deleted from subcollection`);
-//       });
-    // });
 }
+
+export async function CheckIfUserExsits(email) {
+    try {
+        const usersRef = collection(db, 'users');
+        const q = query(usersRef, where('email', '==', email));
+        const querySnapshot = await getDocs(q);
+        
+        return querySnapshot.empty; // Return true if no matching username is found
+    } catch (error) {
+        console.error('Error checking username availability:', error);
+        throw error;
+    }
+}
+
+
+export async function GetUserName(email,method ) {
+  try {
+    console.log(email)
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where(method, '==', email));
+    const querySnapshot = await getDocs(q);
+    const final = querySnapshot.docs[0].data()
+
+    console.log(final)
+    return final; // Return array of usernames
+  } catch (error) {
+    console.error('Error checking username availability:', error);
+    throw error;
+  }
+}
+
+export async function UploadProfile(formdata, user){
+
+    const docRef = doc(db, 'users', formdata.email); // Construct document reference
+
+    try {
+      await setDoc(docRef, {
+        email: formdata.email,
+        username: formdata.username,
+        loaction: formdata.location,
+        bio: formdata.bio,
+        photoURL: user
+      });
+  
+      console.log('Profile data uploaded successfully.');
+    } catch (error) {
+      console.error('Error uploading profile data:', error);
+      throw error; // Rethrow the error to handle it elsewhere if needed
+    }
+}   
+
+
+export async function IsUsernameAvailable(username) {
+    if (username.length < 1) {
+      return false; // Reject empty username
+    }
+  
+    try {
+      // Get a reference to the users collection
+      const usersRef = collection(db, 'users');
+  
+      // Query all documents in the users collection
+      const querySnapshot = await getDocs(usersRef);
+  
+      // Flag to track username availability
+      let isAvailable = true;
+  
+      // Iterate over each document in the query snapshot
+      querySnapshot.forEach((doc) => {
+        // Get the data of the document
+        const userData = doc.data();
+  
+        // Check if the username matches the provided username
+        if (userData.username === username) {
+          // Username is already taken
+          isAvailable = false;
+        }
+      });
+  
+      // Return the final availability status
+      return isAvailable;
+    } catch (error) {
+      console.error('Error checking username availability:', error);
+      throw error; // Throw the error for handling in the calling code
+    }
+  }

@@ -2,7 +2,10 @@ import React from "react";
 import { UserAuth } from "../../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import ExplorePage from "./ExplorePage";
-import "./Home.css";
+import { NavigationFontIcon } from "react-md";
+import Navbar from "../../Components/Navbar";
+import SearchBar from "../../Components/SearchBar";
+import Settings from '../../Components/Settings'
 
 export default function Home() {
   const { logOut, user, googleSignIn } = UserAuth();
@@ -28,31 +31,17 @@ export default function Home() {
 
   return (
     <>
-      <button
-        id="SignOut"
-        onClick={() => {
-          {
-            user ? handleSignOut() : handleSignIn();
-          }
-        }}
-      >
-        {user ? "Sign Out" : "sign In"}
-      </button>
-      <div id="welcomeAdd">
-        <h1 id="welcomeMessege">Welcome <span onClick={() => {
-          navigate('/Profile')
-        }} className="profile">{user?.displayName}</span></h1>
-        <button
-          id="addJourney"
-          className="button"
-          onClick={() => {
-            navigate("/AddJourney");
-          }}
-        >
-          Add Journey
-        </button>
+      <div className="flex flex-col">
+        <div className="flex justify-between m-[10px] my-[20px] mb-[40px]">
+          <SearchBar></SearchBar>
+          <Settings></Settings>
+        </div>
+          <h1 className="text-4xl font-fontMain self-start mb-[-10px] border-b-2 border-black pr-[25px] pl-[5px] pl-[20px]">Explore Logs near you</h1>
+        <div className="mx-auto flex flex-col gap-1 pb-[60px]">
+          <ExplorePage></ExplorePage>
+        </div>
       </div>
-      <ExplorePage></ExplorePage>
+      <Navbar></Navbar>
     </>
   );
 }

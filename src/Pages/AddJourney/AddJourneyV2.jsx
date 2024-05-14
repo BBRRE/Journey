@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { uploadImages } from "../../Config/storage";
 import { addJourneyData, addActivityData } from "../../Config/firestore";
-import { getAuth } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import uuid from "react-uuid";
-import "../AddJourney/AddJourney.css";
+import Navbar from "../../Components/Navbar";
+import { CheckIfUserExsits } from "../../Config/firestore";
+import { getAuth } from "firebase/auth";
+import '../../index.css'
 
 export default function AddJourney() {
   const [activites, setActivites] = useState(0);
@@ -12,14 +15,29 @@ export default function AddJourney() {
   const user = getAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(user, async (user) => {
+      if (user) {
+        console.log(await CheckIfUserExsits(user.email))
+        if ( await CheckIfUserExsits(user.email)) {
+          navigate('/login')
+        }
+      }
+    });
+  
+    return unsubscribe; // This will let it clean up when the ArtistScreen unmounts
+  }, []);
+
+
+
   //Function that adds an activity form
   let temp = [];
   const addActivityForm = () => {
     for (let i = 0; i < activites; i++) {
       temp.push(
-        <div className="activites" id={`activity${i + 1}`}>
-          <h1>Activity{i + 1}</h1>
-          <label className="fileLabel" htmlFor={`photoInput${i + 1}`}>
+        <div className="bg-secondaryAc-light rounded-lg px-[20px] pb-[20px] pt-[10px] flex flex-col gap-[15px]" id={`activity${i + 1}`}>
+          <div className="flex gap-[10px] items-center flex-col sm:flex-row">
+          <label className=" mt-[16px] hover:cursor-pointer flex flex-col justify-center items-center  w-[150px] h-[150px] bg-primaryBg-light bg-opacity-[0.5] border-dashed border-2 border-teirtiaryAc" htmlFor={`photoInput${i + 1}`}>
             Upload Photos
             <input
               type="file"
@@ -29,37 +47,55 @@ export default function AddJourney() {
               className="file"
             />
           </label>
-          <label htmlFor={`ActivityName${i + 1}`}>
-            <span className="ran"> Activity Name</span>
+          <div className="flex flex-col gap-[5px] justify-between flex-grow w-full sm:w-auto">
+          <label htmlFor={`ActivityName${i + 1}`} className="flex flex-col">
+            <span className="text-lg"> Activity Name</span>
             <input
               required
               maxLength={30}
               type="text"
               placeholder="Hotel, Restaurant, Resort Name... "
               id={`ActivityName${i + 1}`}
+              className="rounded-md h-[2rem] pl-[5px]"
             />
           </label>
-          <label htmlFor={`Description${i + 1}`}>
-            <span className="ran"> Description</span>
-            <input
+          <label htmlFor={`Description${i + 1}`} className="flex flex-col">
+            <span className="text-lg"> Description</span>
+            <textarea
               required
               maxLength={250}
               id={`Description${i + 1}`}
               type="text"
               placeholder="How long was your stay, important info..."
+              className="rounded-md h-[4rem] pl-[5px] resize-none"
             />
           </label>
-          <label htmlFor={`price${i + 1}`}>
-            <span className="ran"> Price </span>
+          </div>
+          </div>
+          <div className="flex gap-[10px] flex-col sm:flex-row">
+          <label htmlFor="OverviewLocation" className="flex flex-col gap-[2px] flex-grow">
+            <span className="text-lg"> Location </span>
+            <input
+              type="text"
+              placeholder="Starting Location: Country, City"
+              maxLength={100}
+              className="rounded-md h-[2rem] pl-[5px] "
+              required
+            />
+          </label>
+          <label htmlFor={`price${i + 1}`} className="flex flex-col gap-[2px]">
+            <span className="text-lg"> Price </span>
             <input
               required
               maxLength={30}
               type="number"
               id={`price${i + 1}`}
               placeholder="price of activity"
+              className="rounded-md h-[2rem] pl-[5px] "
               step={0.01}
             />
           </label>
+          </div>
         </div>
       );
     }
@@ -81,23 +117,22 @@ export default function AddJourney() {
   //function that packages the form data into objects one for overview and x amount for activities
   const packageData = (e) => {
     formData.push({
-      Photos: e.target[0].files,
-      Location: e.target[1].value,
-      Name: e.target[2].value,
-      description: e.target[3].value,
-      price: Number(e.target[4].value),
+      Name: e.target[0].value,
+      Description: e.target[1].value,
+      Location: e.target[2].value,
     });
 
-    if (e.target.length < 8) {
+    if (e.target.length < 5) {
       return;
     } else {
-      for (let i = 5; i < e.target.length - 3; i += 4) {
+      for (let i = 3; i < e.target.length - 3; i += 5) {
         formData.push({
-          ActivityNumber: i - 4,
-          Photos: e.target[i].files,
+          ActivityNumber: (i - 3) / 5 + 1,
           Name: e.target[i + 1].value,
-          description: e.target[i + 2].value,
-          Price: Number(e.target[i + 3].value),
+          Description: e.target[i + 2].value,
+          Location: e.target[i + 3].value,
+          Price: Number(e.target[i + 4].value),
+          Photos: e.target[i].files,
         });
       }
     }
@@ -113,26 +148,24 @@ export default function AddJourney() {
       user.currentUser.uid,
       formData[0].Location,
       formData[0].Name,
-      formData[0].description,
-      formData[0].price,
+      formData[0].Description,
       uuid,
-      user.currentUser.displayName,
+      user.currentUser.email,
       user.currentUser.photoURL
     );
-    //uploads overvire images
-    uploadImages(formData[0].Photos, user.currentUser.uid, uuid, "overview");
 
     for (let i = 1; i < activites + 1; i++) {
-      addActivityData(
+      await addActivityData(
         formData[i].Name,
-        formData[i].description,
+        formData[i].Description,
         formData[i].Price,
+        formData[i].Location,
         `/JourneyImages/${user.currentUser.uid}/${uuid}/Activity ${formData[i].ActivityNumber}`,
         dataRef,
         formData[i].ActivityNumber
       );
       //uploads activity images to firestore
-      uploadImages(
+      await uploadImages(
         formData[i].Photos,
         user.currentUser.uid,
         uuid,
@@ -142,106 +175,84 @@ export default function AddJourney() {
 
     console.log("complete");
   };
+  
 
   return (
     <>
-      <button
-        className="button"
-        onClick={() => {
-          navigate("/");
-        }}
-      >
-        Back
-      </button>
-      <div className="bigDiv">
-        <h1 className="journeyAdd">Add Journey</h1>
+      <div className="flex flex-col  mb-[100px] mt-[20px]">
         <form
+          className="flex flex-col justify-center items-center w-[90%] max-w-[500px] mx-auto" 
           onSubmit={async (e) => {
             e.preventDefault();
-            handleSubmit(uuid(), e).then(navigate("/"));
+            console.log(user.currentUser.email)
+            await handleSubmit(uuid(), e).then(navigate('/'));
           }}
         >
-          <label className="fileLabel" htmlFor="overviewFileInput">
-            {" "}
-            Upload Photos
-            <input
-              type="file"
-              className="file"
-              accept="image/*"
-              multiple
-              id="overviewFileInput"
-            />
-          </label>
-          <label htmlFor="OverviewLocation">
-            <span className="ran"> Location </span>
-            <input
-              type="text"
-              placeholder="Country, City"
-              maxLength={100}
-              className="locationInput"
-              required
-            />
-          </label>
-          <label htmlFor="journeyName">
-            <span className="ran"> Journey Name </span>
+          <h1 className="text-4xl font-fontMain self-start mb-[20px] border-b-2 border-black pr-[25px] ">Overview</h1>
+          <div id="overview" className="flex flex-col bg-secondaryAc-light rounded-lg px-[20px] pb-[20px] pt-[10px] gap-[15px] w-[100%]">
+          <label htmlFor="journeyName" className="flex flex-col gap-[2px]">
+            <span className="text-lg"> Journey Name </span>
             <input
               type="text"
               placeholder="Nickname for the journey"
               maxLength={30}
               id="journeyName"
               required
-              className="nameInput"
+              className="rounded-md h-[2rem] pl-[5px]"
             />
           </label>
-          <label htmlFor="descriptionItputOverview">
-            <span className="ran"> Description </span>
+          <label htmlFor="descriptionItputOverview" className="flex flex-col gap-[2px]">
+            <span className="text-lg"> Description </span>
             <textarea
               type="text"
               id="descriptionItput"
               maxLength={250}
-              className="descriptionInputOverview"
+              className="rounded-md h-[4rem] pl-[5px] resize-none"
               required
               placeholder="What was good about this..."
             />
           </label>
-          <label htmlFor="priceInputOverview">
-            <span className="ran"> Price </span>
+          <label htmlFor="OverviewLocation" className="flex flex-col gap-[2px]">
+            <span className="text-lg"> Location </span>
             <input
-              type="number"
-              min={0}
-              placeholder="Price"
-              maxLength={30}
-              step={0.01}
-              className="priceInput"
+              type="text"
+              placeholder="Starting Location: Country, City"
+              maxLength={100}
+              className="rounded-md h-[2rem] pl-[5px] "
               required
             />
           </label>
-          {addActivityForm()}
-          <div className="addOrSubmit">
-            <button
-              type="button"
-              className="activityButton button"
-              onClick={AddActivies}
-            >
-              Add Activity
-            </button>
-
-            {activites ? (
-              <button
-                type="button"
-                className="button removeActivity"
-                onClick={removeActivity}
-              >
-                Remove Activity
-              </button>
-            ) : null}
-
-            <button type="submit" className="submitButton button">
-              Submit
-            </button>
-          </div>
-        </form>
       </div>
+      <div id="activities" className="flex flex-col w-[100%] gap-[20px] mt-[20px] ">
+      {activites ? <h1 className="text-4xl font-fontMain self-start mb-[0px] border-b-2 border-black pr-[25px] ">Activities</h1>: null}
+        {addActivityForm()}
+      </div>
+      <div className="flex w-[100%] max justify-center items-center gap-[10px] h-[2rem] mt-[10px]">
+        <button
+          type="button"
+          className=" border-2 border-secondaryAc-dark flex-grow rounded-md h-[2rem] text-blue-gray-700 font-semibold"
+          onClick={AddActivies}
+        >
+          Add Activity
+        </button>
+
+        {activites ? (
+          <button
+            type="button"
+            className="border-2 border-secondaryAc-dark flex-grow rounded-md h-[2rem] text-blue-gray-700 font-semibold"
+            onClick={removeActivity}
+          >
+            Remove Activity
+          </button>
+        ) : null}
+
+        <button type="submit" className="bg-secondaryAc-dark flex-grow-[2] rounded-md h-[2rem] text-white font-semibold">
+          Submit
+        </button>
+      </div>
+    </form >
+      </div >
+          <Navbar></Navbar>
     </>
   );
 }

@@ -11,7 +11,7 @@ export async function uploadImages(images, uid, projectName, overview){
         const imageRef = ref(storage, bucket)
         const compressor = new ImageCompressor();
         const newImage = await compressor.compress(images[i], { quality: 0.8 });
-        const result = await uploadBytes(imageRef, newImage).then(console.log('success')).catch((err) => {
+        await uploadBytes(imageRef, newImage).then(console.log('success')).catch((err) => {
             console.log(err)
         })
     }

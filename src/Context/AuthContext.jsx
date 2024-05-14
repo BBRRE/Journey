@@ -14,20 +14,6 @@ const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
 
-  const googleSignIn = () => {
-    const provider = new GoogleAuthProvider();
-    // login in a popuup window if you are on a larger screen else redirect
-    if (checkMobile()) {
-      signInWithRedirect(auth, provider);
-    } else {
-      signInWithPopup(auth, provider);
-    }
-  };
-
-  const logOut = () => {
-    signOut(auth);
-  };
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -37,6 +23,20 @@ export const AuthContextProvider = ({ children }) => {
       unsubscribe();
     };
   }, []);
+  const googleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    // login in a popuup window if you are on a larger screen else redirect
+    if (checkMobile()) {
+      await signInWithRedirect(auth, provider);
+    } else {
+      await signInWithPopup(auth, provider)
+    }
+  };
+
+  const logOut = () => {
+    signOut(auth);
+  };
+
 
   return (
     <AuthContext.Provider value={{ googleSignIn, logOut, user }}>

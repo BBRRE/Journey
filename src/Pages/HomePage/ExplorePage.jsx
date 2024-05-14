@@ -8,11 +8,13 @@ export default function ExplorePage() {
 useEffect(() => {
   const getData = async () => {
     setOverviewInfo(await getJourney(`journeyData`))
-    console.log(overviewInfo)
+    console.log( overviewInfo)
   }
   getData()
 },[])
-  return <div className="explore-cont">
+
+
+  return <div className="grid mt-[50px] mb-[50px] mx-auto gap-[20px] xl:grid-cols-2 grid-cols-1 w-full ">
     {
     overviewInfo.map((x) =>
     <Overview

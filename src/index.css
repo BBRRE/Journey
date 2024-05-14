@@ -1,4 +1,28 @@
-*{
-    background-color: rgb(240, 214, 224);
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+    background-color: #f2f2f2;
+
 }
+
+.file{
+    width: 80%;
+    text-align: center;
+    margin-left: 15px;
+}
+
+input::file-selector-button{
+    display: none;
+}
+
+.carousel-root{
+    width: 200px;
+    height: 200px;
+}
+
+.periodic-lines {
+    height: 100vh; /* Adjust the height as needed */
+    background-image: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.5) 52%, transparent 52%);
+  }
