@@ -26,6 +26,5 @@ module.exports = withMT({
       }
     },
   },
-  plugins: [],
 }
 )

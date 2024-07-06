@@ -19,12 +19,12 @@ export default function AddJourney() {
     const unsubscribe = onAuthStateChanged(user, async (user) => {
       if (user) {
         console.log(await CheckIfUserExsits(user.email))
-        if ( await CheckIfUserExsits(user.email)) {
+        if (await CheckIfUserExsits(user.email)) {
           navigate('/login')
         }
       }
     });
-  
+
     return unsubscribe; // This will let it clean up when the ArtistScreen unmounts
   }, []);
 
@@ -37,64 +37,64 @@ export default function AddJourney() {
       temp.push(
         <div className="bg-secondaryAc-light rounded-lg px-[20px] pb-[20px] pt-[10px] flex flex-col gap-[15px]" id={`activity${i + 1}`}>
           <div className="flex gap-[10px] items-center flex-col sm:flex-row">
-          <label className=" mt-[16px] hover:cursor-pointer flex flex-col justify-center items-center  w-[150px] h-[150px] bg-primaryBg-light bg-opacity-[0.5] border-dashed border-2 border-teirtiaryAc" htmlFor={`photoInput${i + 1}`}>
-            Upload Photos
-            <input
-              type="file"
-              id={`photoInput${i + 1}`}
-              multiple
-              accept="image/*"
-              className="file"
-            />
-          </label>
-          <div className="flex flex-col gap-[5px] justify-between flex-grow w-full sm:w-auto">
-          <label htmlFor={`ActivityName${i + 1}`} className="flex flex-col">
-            <span className="text-lg"> Activity Name</span>
-            <input
-              required
-              maxLength={30}
-              type="text"
-              placeholder="Hotel, Restaurant, Resort Name... "
-              id={`ActivityName${i + 1}`}
-              className="rounded-md h-[2rem] pl-[5px]"
-            />
-          </label>
-          <label htmlFor={`Description${i + 1}`} className="flex flex-col">
-            <span className="text-lg"> Description</span>
-            <textarea
-              required
-              maxLength={250}
-              id={`Description${i + 1}`}
-              type="text"
-              placeholder="How long was your stay, important info..."
-              className="rounded-md h-[4rem] pl-[5px] resize-none"
-            />
-          </label>
-          </div>
+            <label className=" mt-[16px] hover:cursor-pointer flex flex-col justify-center items-center  w-[150px] h-[150px] bg-primaryBg-light bg-opacity-[0.5] border-dashed border-2 border-teirtiaryAc" htmlFor={`photoInput${i + 1}`}>
+              Upload Photos
+              <input
+                type="file"
+                id={`photoInput${i + 1}`}
+                multiple
+                accept="image/*"
+                className="file"
+              />
+            </label>
+            <div className="flex flex-col gap-[5px] justify-between flex-grow w-full sm:w-auto">
+              <label htmlFor={`ActivityName${i + 1}`} className="flex flex-col">
+                <span className="text-lg"> Activity Name</span>
+                <input
+                  required
+                  maxLength={30}
+                  type="text"
+                  placeholder="Hotel, Restaurant, Resort Name... "
+                  id={`ActivityName${i + 1}`}
+                  className="rounded-md h-[2rem] pl-[5px]"
+                />
+              </label>
+              <label htmlFor={`Description${i + 1}`} className="flex flex-col">
+                <span className="text-lg"> Description</span>
+                <textarea
+                  required
+                  maxLength={250}
+                  id={`Description${i + 1}`}
+                  type="text"
+                  placeholder="How long was your stay, important info..."
+                  className="rounded-md h-[4rem] pl-[5px] resize-none"
+                />
+              </label>
+            </div>
           </div>
           <div className="flex gap-[10px] flex-col sm:flex-row">
-          <label htmlFor="OverviewLocation" className="flex flex-col gap-[2px] flex-grow">
-            <span className="text-lg"> Location </span>
-            <input
-              type="text"
-              placeholder="Starting Location: Country, City"
-              maxLength={100}
-              className="rounded-md h-[2rem] pl-[5px] "
-              required
-            />
-          </label>
-          <label htmlFor={`price${i + 1}`} className="flex flex-col gap-[2px]">
-            <span className="text-lg"> Price </span>
-            <input
-              required
-              maxLength={30}
-              type="number"
-              id={`price${i + 1}`}
-              placeholder="price of activity"
-              className="rounded-md h-[2rem] pl-[5px] "
-              step={0.01}
-            />
-          </label>
+            <label htmlFor="OverviewLocation" className="flex flex-col gap-[2px] flex-grow">
+              <span className="text-lg"> Location </span>
+              <input
+                type="text"
+                placeholder="Starting Location: Country, City"
+                maxLength={100}
+                className="rounded-md h-[2rem] pl-[5px] "
+                required
+              />
+            </label>
+            <label htmlFor={`price${i + 1}`} className="flex flex-col gap-[2px]">
+              <span className="text-lg"> Price </span>
+              <input
+                required
+                maxLength={30}
+                type="number"
+                id={`price${i + 1}`}
+                placeholder="price of activity"
+                className="rounded-md h-[2rem] pl-[5px] "
+                step={0.01}
+              />
+            </label>
           </div>
         </div>
       );
@@ -120,12 +120,13 @@ export default function AddJourney() {
       Name: e.target[0].value,
       Description: e.target[1].value,
       Location: e.target[2].value,
+      Continent: e.target[3].value
     });
 
-    if (e.target.length < 5) {
+    if (e.target.length < 6) {
       return;
     } else {
-      for (let i = 3; i < e.target.length - 3; i += 5) {
+      for (let i = 4; i < e.target.length - 3; i += 5) {
         formData.push({
           ActivityNumber: (i - 3) / 5 + 1,
           Name: e.target[i + 1].value,
@@ -151,7 +152,8 @@ export default function AddJourney() {
       formData[0].Description,
       uuid,
       user.currentUser.email,
-      user.currentUser.photoURL
+      user.currentUser.photoURL,
+      formData[0].Continent,
     );
 
     for (let i = 1; i < activites + 1; i++) {
@@ -175,13 +177,13 @@ export default function AddJourney() {
 
     console.log("complete");
   };
-  
+
 
   return (
     <>
       <div className="flex flex-col  mb-[100px] mt-[20px]">
         <form
-          className="flex flex-col justify-center items-center w-[90%] max-w-[500px] mx-auto" 
+          className="flex flex-col justify-center items-center w-[90%] max-w-[500px] mx-auto"
           onSubmit={async (e) => {
             e.preventDefault();
             console.log(user.currentUser.email)
@@ -190,69 +192,82 @@ export default function AddJourney() {
         >
           <h1 className="text-4xl font-fontMain self-start mb-[20px] border-b-2 border-black pr-[25px] ">Overview</h1>
           <div id="overview" className="flex flex-col bg-secondaryAc-light rounded-lg px-[20px] pb-[20px] pt-[10px] gap-[15px] w-[100%]">
-          <label htmlFor="journeyName" className="flex flex-col gap-[2px]">
-            <span className="text-lg"> Journey Name </span>
-            <input
-              type="text"
-              placeholder="Nickname for the journey"
-              maxLength={30}
-              id="journeyName"
-              required
-              className="rounded-md h-[2rem] pl-[5px]"
-            />
-          </label>
-          <label htmlFor="descriptionItputOverview" className="flex flex-col gap-[2px]">
-            <span className="text-lg"> Description </span>
-            <textarea
-              type="text"
-              id="descriptionItput"
-              maxLength={250}
-              className="rounded-md h-[4rem] pl-[5px] resize-none"
-              required
-              placeholder="What was good about this..."
-            />
-          </label>
-          <label htmlFor="OverviewLocation" className="flex flex-col gap-[2px]">
-            <span className="text-lg"> Location </span>
-            <input
-              type="text"
-              placeholder="Starting Location: Country, City"
-              maxLength={100}
-              className="rounded-md h-[2rem] pl-[5px] "
-              required
-            />
-          </label>
-      </div>
-      <div id="activities" className="flex flex-col w-[100%] gap-[20px] mt-[20px] ">
-      {activites ? <h1 className="text-4xl font-fontMain self-start mb-[0px] border-b-2 border-black pr-[25px] ">Activities</h1>: null}
-        {addActivityForm()}
-      </div>
-      <div className="flex w-[100%] max justify-center items-center gap-[10px] h-[2rem] mt-[10px]">
-        <button
-          type="button"
-          className=" border-2 border-secondaryAc-dark flex-grow rounded-md h-[2rem] text-blue-gray-700 font-semibold"
-          onClick={AddActivies}
-        >
-          Add Activity
-        </button>
+            <label htmlFor="journeyName" className="flex flex-col gap-[2px]">
+              <span className="text-lg"> Journey Name </span>
+              <input
+                type="text"
+                placeholder="Nickname for the journey"
+                maxLength={30}
+                id="journeyName"
+                required
+                className="rounded-md h-[2rem] pl-[5px]"
+              />
+            </label>
+            <label htmlFor="descriptionItputOverview" className="flex flex-col gap-[2px]">
+              <span className="text-lg"> Description </span>
+              <textarea
+                type="text"
+                id="descriptionItput"
+                maxLength={250}
+                className="rounded-md h-[4rem] pl-[5px] resize-none"
+                required
+                placeholder="What was good about this..."
+              />
+            </label>
+            <div className="flex align-middle justify-between ">  
+            <label htmlFor="OverviewLocation" className="flex flex-col gap-[2px] w-[60%]">
+              <span className="text-lg"> Location </span>
+              <input
+                type="text"
+                placeholder="Starting Location: Country, City"
+                maxLength={100}
+                className="rounded-md h-[2rem] pl-[5px] "
+                required
+              />
+            </label>
+            <label htmlFor="OverviewLocation" className="flex flex-col gap-[2px] width-[30%] mb-[-5px]">
+              <span className="text-lg"> Continent </span>
+              <select className="h-[34px] px-3 rounded-md" name="cars" id="cars">
+                <option value="Africa">Africa</option>
+                <option value="Asia">Asia</option>
+                <option value="Europe">Europe</option>
+                <option value="NAmerica">N.America</option>
+                <option value="SAmerica">S.America</option>
+                <option value="Oceania">Oceania</option>
+              </select>
+            </label>
+            </div>
+          </div>
+          <div id="activities" className="flex flex-col w-[100%] gap-[20px] mt-[20px] ">
+            {activites ? <h1 className="text-4xl font-fontMain self-start mb-[0px] border-b-2 border-black pr-[25px] ">Activities</h1> : null}
+            {addActivityForm()}
+          </div>
+          <div className="flex w-[100%] max justify-center items-center gap-[10px] h-[2rem] mt-[10px]">
+            <button
+              type="button"
+              className=" border-2 border-secondaryAc-dark flex-grow rounded-md h-[2rem] text-blue-gray-700 font-semibold"
+              onClick={AddActivies}
+            >
+              Add Activity
+            </button>
 
-        {activites ? (
-          <button
-            type="button"
-            className="border-2 border-secondaryAc-dark flex-grow rounded-md h-[2rem] text-blue-gray-700 font-semibold"
-            onClick={removeActivity}
-          >
-            Remove Activity
-          </button>
-        ) : null}
+            {activites ? (
+              <button
+                type="button"
+                className="border-2 border-secondaryAc-dark flex-grow rounded-md h-[2rem] text-blue-gray-700 font-semibold"
+                onClick={removeActivity}
+              >
+                Remove Activity
+              </button>
+            ) : null}
 
-        <button type="submit" className="bg-secondaryAc-dark flex-grow-[2] rounded-md h-[2rem] text-white font-semibold">
-          Submit
-        </button>
-      </div>
-    </form >
+            <button type="submit" className="bg-secondaryAc-dark flex-grow-[2] rounded-md h-[2rem] text-white font-semibold">
+              Submit
+            </button>
+          </div>
+        </form >
       </div >
-          <Navbar></Navbar>
+      <Navbar></Navbar>
     </>
   );
 }

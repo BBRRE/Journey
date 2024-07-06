@@ -13,7 +13,7 @@ import { setDoc } from "firebase/firestore";
 //path for fireStore
 const JOURNEYDATA = `journeyData`
 
-export async function addJourneyData(uid,location,name,description, uuid, email,photoURL){
+export async function addJourneyData(uid,location,name,description, uuid, email,photoURL, Continent){
     //add a document to the collection in db with the path of JOURNEYDATA, with an object
     const username = (await getDoc(doc(db,`users/${ email}`))).data()
     
@@ -23,6 +23,7 @@ export async function addJourneyData(uid,location,name,description, uuid, email,
         location: location,
         imageBucket: `/JourneyImages/${uid}/${uuid}/overview`,
         userName: username.username,
+        Continent: Continent,
         photoURL: photoURL
     })
         return myDocRef 
@@ -42,11 +43,13 @@ export async function addActivityData(activityName, description, price, location
 }
 
 //fetch data
-export async function getJourney(x){
-    const querySnapshot = getDocs(collection(db,x))
+export async function getJourney(x,filter){
+  if(filter != undefined){
+    const q = query(collection(db,x), where("Continent", "==", filter))
+    const querySnapshot = getDocs(q)
     console.log(querySnapshot)
     let allData = []
-
+  
     for(const documentSnapshot of (await querySnapshot).docs){
         const data = documentSnapshot.data()
         allData.push({
@@ -57,6 +60,22 @@ export async function getJourney(x){
         })
     }
     return allData
+  }else{
+    const querySnapshot = getDocs(collection(db,x))
+    console.log(querySnapshot)
+    let allData = []
+  
+    for(const documentSnapshot of (await querySnapshot).docs){
+        const data = documentSnapshot.data()
+        allData.push({
+            ...data,
+            id: documentSnapshot.id,
+            imageURL: await retrieveImages(data['imageBucket']
+            )
+        })
+    }
+    return allData
+  }
 
 }
 

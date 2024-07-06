@@ -41,7 +41,7 @@ export default function Profile() {
           >
 
           </Overview>
-          <button className="bg-[#D67060] mx-autorounded-lg shadow-md border-r-4 border-b-4 border-solid rounded-bl-lg rounded-br-lg border-[#D67] mx-auto w-[600px]"
+          <button className="bg-[#D67060] mx-autorounded-lg shadow-md border-r-4 border-b-4 border-solid rounded-bl-lg rounded-br-lg border-[#D67] mx-auto w-[350px] md:w-[600px]"
             onClick={() => {
               deleteData(x).then(console.log('res'))
             }}
@@ -66,21 +66,20 @@ export default function Profile() {
   return (
     <>
       <div className='flex flex-col'>
-
-        <div className='w-[620px] md:w-full h-[20vh] bg-gradient-to-br from-secondaryAc-light to-secondaryAc-dark flex items-center m-[0px]' >
-          <img src={userData.photoURL} className='h-[25bh] rounded-full ml-[3vw] ' />
-          <div className='flex flex-col ml-[30px] mt-[15px] h-[150px] text-pretty'>
+        <div className='w-full md:w-full h-[20vh] bg-gradient-to-br from-secondaryAc-light to-secondaryAc-dark flex items-center m-[0px]' >
+          <img src={userData.photoURL} className='h-[25bh] rounded-full ml-[3vw] mr-[-25px] ' />
+          <div className='flex w-auto flex-col ml-[30px] mt-[15px] h-[150px] text-pretty'>
             <div className='font-fontMain text-[4.2vh] mb-[5px]'>
               @{userData.username}
             </div>
             <span className='text-gray-700 ml-[20px] mt-[-10px] text-sm mb-[5px]'>{userData.loaction}</span>
-            <p className='font-fontSecondary text-[1.7vh] h-auto text-wrap overflow-x-clip ml-[15px] w-[300px]'>
+            <p className='font-fontSecondary text-[1.7vh] h-auto text-wrap overflow-x-clip ml-[15px] w-auto'>
               {userData.bio}
             </p>
           </div>
         </div>
 
-        <div className="grid mt-[50px] mb-[50px] mx-auto gap-[20px] xl:grid-cols-2 grid-cols-1 w-full vert">
+        <div className="grid mt-[50px] mb-[150px] mx-auto gap-[20px] 2xl:grid-cols-2 grid-cols-1 w-full vert">
           {why()}
         </div>
       </div>

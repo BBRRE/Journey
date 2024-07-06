@@ -22,7 +22,36 @@ input::file-selector-button{
     height: 200px;
 }
 
+@media only screen and (max-width: 720px){
+    .carousel-root{
+        width: 150px;
+        height: 150px;
+    }
+    .carousel{
+        width: 150px;
+    }
+}
+
 .periodic-lines {
     height: 100vh; /* Adjust the height as needed */
     background-image: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.5) 52%, transparent 52%);
+  }
+
+.overview{
+    background: rgb(241,255,238);
+    background: linear-gradient(115deg, rgba(241,255,238,1) 79%, rgba(255,240,235,1) 100%);
+}
+
+.slide-selected{
+    box-shadow: inset 10 10 10;
+}
+
+.fade-in {
+    opacity: 1;
+    transition: opacity 0.1s ease-in;
+  }
+  
+  .fade-out {
+    opacity: 0;
+    transition: opacity 0.1s ease-out;
   }

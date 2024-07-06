@@ -6,6 +6,7 @@ import Protected from "./Components/Protected";
 import AddJourney from "./Pages/AddJourney/AddJourneyV2";
 import Profile from "./Pages/Profile Page/Profile";
 import ActivityPage from "./Components/Activity/Activity";
+import FullView from "./Pages/HomePage/FullView";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/:userName/:documentRef" element={<ActivityPage />} />
+          <Route path="/search/:explore" element={<FullView />} />
           <Route
             path="/AddJourney"
             element={
