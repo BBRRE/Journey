@@ -28,14 +28,11 @@ export default function LoginPage() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        console.log(await CheckIfUserExsits(user.email))
         if ( await CheckIfUserExsits(user.email)) {
           setCompleteProfile(true)
         }else{
           navigate('/')
         }
-      } else {
-        console.log('no user')
       }
     });
 

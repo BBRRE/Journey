@@ -55,3 +55,8 @@ input::file-selector-button{
     opacity: 0;
     transition: opacity 0.1s ease-out;
   }
+
+  #OverviewPic{
+    text-align: center;
+    margin-left: 58%;
+  }

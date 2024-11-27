@@ -8,9 +8,6 @@ export default withMT({
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    screens: {
-      'almost3XL': '1800px',
-    },
     extend: {keyframes: {
       "accordion-down": {
         from: { height: 0 },

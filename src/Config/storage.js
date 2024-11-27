@@ -12,7 +12,7 @@ export async function uploadImages(images, uid, projectName, overview){
         const compressor = new ImageCompressor();
         const newImage = await compressor.compress(images[i], { quality: 0.8 });
         await uploadBytes(imageRef, newImage).then(console.log('success')).catch((err) => {
-            console.log(err)
+            console.error(err)
         })
     }
 }

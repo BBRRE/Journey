@@ -9,7 +9,7 @@ export default withMT({
   ],
   theme: {
     screens: {
-      'almost3XL': '1800px',
+      'almost2XL': '1800px',
     },
     extend: {keyframes: {
       "accordion-down": {

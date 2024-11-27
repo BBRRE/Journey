@@ -17,7 +17,6 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      console.log("user", currentUser);
     });
     return () => {
       unsubscribe();
@@ -25,12 +24,8 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
   const googleSignIn = async () => {
     const provider = new GoogleAuthProvider();
-    // login in a popuup window if you are on a larger screen else redirect
-    if (checkMobile()) {
-      await signInWithRedirect(auth, provider);
-    } else {
+    // login in a popuup window if you are on a larger screen else redirect, new firebase update f thisup
       await signInWithPopup(auth, provider)
-    }
   };
 
   const logOut = () => {
