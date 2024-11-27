@@ -1,0 +1,30 @@
+import React, { useEffect, useState } from "react";
+import Overview from "../../Components/DisplayOverview/Overview";
+import { getJourney } from "../../Config/firestore";
+
+export default function ExplorePage({ filteredPosts }) {
+  const [overviewInfo, setOverviewInfo] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      // Use filtered posts if available, otherwise fetch default data
+      if (filteredPosts) {
+        console.log(filteredPosts)
+        setOverviewInfo(filteredPosts);
+      } else {
+        setOverviewInfo(await getJourney(`journeyData`));
+      }
+      console.log(overviewInfo)
+    };
+    getData();
+  }, [filteredPosts]);
+
+  return (
+    <>
+    {!overviewInfo.length === 0? 'No results' : ''}
+      {overviewInfo.map((x) => (
+        <Overview obj={x} key={crypto.randomUUID()} />
+      ))}
+    </>
+  );
+}
