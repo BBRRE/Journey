@@ -171,7 +171,7 @@ const AddJourneyV2 = () => {
                 />
                 <img
                   src={overviewImage}
-                  className={`w-full h-full object-cover rounded-t-2xl bg-gray-400 ${overviewImage ? '' : 'p-[1px]'}  `}
+                  className={`w-full h-full object-cover rounded-t-2xl bg-gray-400 ${overviewImage ? '' : 'hidden' } `}
                   style={{
                     clipPath: 'url(#curvedMask)',
                     WebkitClipPath: 'url(#curvedMask)',

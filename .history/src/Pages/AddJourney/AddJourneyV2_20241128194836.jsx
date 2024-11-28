@@ -146,7 +146,7 @@ const AddJourneyV2 = () => {
             color="black  "
           />
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className='w-full h-auto mx-auto px-4 mb-[100px]'>
+        <form onSubmit={handleSubmit(onSubmit)} className='w-full h-auto mx-auto px-4 mb-[50px]'>
           <div className="flex flex-col mb-[100px] mt-12 mx-auto max-w-[500px] justify-center items-center gap-4">
             {/* Overview Image Upload */}
             <div className='max-w-[500px] w-full mb-[-50px]'>
@@ -171,7 +171,7 @@ const AddJourneyV2 = () => {
                 />
                 <img
                   src={overviewImage}
-                  className={`w-full h-full object-cover rounded-t-2xl bg-gray-400 ${overviewImage ? '' : 'p-[1px]'}  `}
+                  className="w-full h-full object-cover p-4 rounded-t-2xl bg-gray-400"
                   style={{
                     clipPath: 'url(#curvedMask)',
                     WebkitClipPath: 'url(#curvedMask)',
