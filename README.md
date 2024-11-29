@@ -3,7 +3,7 @@
 
 
 # What is it
-## Website for Sharing travel logs, I've been building this website out for a while now, it first started as a way to learn web dev but I just bought a domain so I have to commit the rest of my life to it. It's a website for sharing travel itinerates, kind of like trip advisor without the advertisers selling you a plane tickets or hotels. https://travel-logs.com/
+Website for Sharing travel logs, I've been building this website out for a while now, it first started as a way to learn web dev but I just bought a domain so I have to commit the rest of my life to it. It's a website for sharing travel itinerates, kind of like trip advisor without the advertisers selling you a plane tickets or hotels. https://travel-logs.com/
 
 # My vision for this project
 I want this to be a collection of travel itineraries where people post their honest experiences whitout selling you a plane ticket or a hotel stay. There would be travel destinations with detailed costs from hotel stay to renting a bike, and a step by step plan for people to follow or take inspiration from. I often hear stories of friends going on holiday expecting to spend only 100 - 200 pounds while they are there, but end up superised by the true price even after heavy research, I want this website to change that.
