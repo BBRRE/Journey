@@ -49,7 +49,7 @@ const AddJourneyV2 = () => {
     const files = Array.from(event.target.files);
     const imageUrls = files.map(file => URL.createObjectURL(file));
 
-
+    // Update the activitiesImages state
     const updatedImages = [...activitiesImages];
     updatedImages[index] = imageUrls;
     setActivitiesImages(updatedImages);
@@ -57,31 +57,32 @@ const AddJourneyV2 = () => {
 
   const handleRemoveActivity = () => {
     if (fields.length > 0) {
-      remove(fields.length - 1); 
-      setActivitiesImages(prevImages => prevImages.slice(0, prevImages.length - 1)); 
+      remove(fields.length - 1); // Remove the last activity from the fields
+      setActivitiesImages(prevImages => prevImages.slice(0, prevImages.length - 1)); // Remove the last array of images from activitiesImages
     }
   };
 
 
-
+  // In the onSubmit handler, handle image files
   const onSubmit = async (data) => {
     console.log(data)
     const suuid = uuid();
     let totalPrice = 0;
     let numberOfActivities = 0;
 
-
+    // Calculate total price and activity count
     data.activities.forEach((activity) => {
       totalPrice += activity.price || 0;
       totalPrice += activity.transportCost || 0;
       numberOfActivities += 1;
     });
 
-
+    // Add the calculated data
     data.totalPrice = totalPrice;
     data.numberOfActivities = numberOfActivities;
 
     try {
+      // Firestore and storage operations
       const dataRef = await addJourneyData(
         user.currentUser.uid,
         data.startingLocation,
@@ -120,7 +121,7 @@ const AddJourneyV2 = () => {
         );
       }
 
-
+      // Navigate to another page after submission
       navigate(`/`);
     } catch (error) {
       console.error('Submission error:', error);
@@ -378,7 +379,8 @@ const AddJourneyV2 = () => {
                 </div>
               ))}
             </div>
-            {/* Buttons */}
+
+            {/* Action Buttons */}
             <div className='flex w-full gap-2 mt-[-20px]'>
               <button
                 type="button"

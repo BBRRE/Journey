@@ -5,33 +5,33 @@ import { getJourney } from "../../Config/firestore";
 export default function ExplorePage({ criteria }) {
   const [displayedInfo, setDisplayedInfo] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [lastVisible, setLastVisible] = useState(null); 
-  const [hasMore, setHasMore] = useState(true);
+  const [lastVisible, setLastVisible] = useState(null);  // Store last visible document for pagination
+  const [hasMore, setHasMore] = useState(true);  // Track if more posts are available
   const [sloading, setSloading] = useState(false);
   
 
-
+  // Fetch initial data when component mounts
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true); 
+      setLoading(true);  // Start loading
       let journeyData;
 
       if (!criteria) {
-        journeyData = await getJourney("journeyData");
+        journeyData = await getJourney("journeyData");  // Fetch initial data without criteria
       } else {
-        journeyData = await getJourney("journeyData", criteria);
+        journeyData = await getJourney("journeyData", criteria);  // Fetch data with criteria
       }
 
-      setDisplayedInfo(journeyData.data); 
-      setLastVisible(journeyData.lastVisibleDoc);
-      setLoading(false);  
-      setHasMore(journeyData.data.length === 6);
+      setDisplayedInfo(journeyData.data);  // Set the data
+      setLastVisible(journeyData.lastVisibleDoc);  // Set the last visible document for pagination
+      setLoading(false);  // Stop loading
+      setHasMore(journeyData.data.length === 6);  // Check if there are more posts to load
     };
 
     fetchData();
-  }, [criteria]); 
+  }, [criteria]);  // Trigger on criteria change
 
-
+  // Load more data when button is clicked
   const loadMore = async () => {
     setSloading(true)
     let journeyData;
@@ -42,9 +42,9 @@ export default function ExplorePage({ criteria }) {
       journeyData = await getJourney("journeyData", criteria, false, lastVisible);
     }
 
-    setDisplayedInfo((prev) => [...prev, ...journeyData.data]);
-    setLastVisible(journeyData.lastVisibleDoc);
-    setHasMore(journeyData.data.length === 6);  
+    setDisplayedInfo((prev) => [...prev, ...journeyData.data]);  // Append new data to existing data
+    setLastVisible(journeyData.lastVisibleDoc);  // Update last visible doc
+    setHasMore(journeyData.data.length === 6);  // If less than 4 posts are returned, no more data is available
     setSloading(false)
   };
   return (
@@ -160,7 +160,7 @@ export default function ExplorePage({ criteria }) {
             <button
               className={` mb-14 2xl:col-span-2 underline italic almost3XL:col-span-3 ${sloading ? 'animate-pulse' : ''}`}
               onClick={loadMore}
-              disabled={loading} 
+              disabled={loading}  // Disable the button when loading
             >
               Load More
             </button>
